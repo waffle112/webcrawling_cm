@@ -46,6 +46,12 @@ let enterusername = document.getElementById("entername");
 let saveTime = document.getElementById("save");
 let showTimes = document.getElementById("times");
 let clearTime = document.getElementById("clear");
+let wordcount = document.getElementById("wordcounts");
+
+let avewordcnt = document.getElementById('avewordcnt'); 
+let biggestword = document.getElementById('biggestword'); 
+let commonword = document.getElementById('commonword'); 
+let wordoccurence = document.getElementById('wordoccurence'); 
 
 //variables to keep track of time
 var startTime;
@@ -167,7 +173,23 @@ function showTime(){
         console.log(JSON.stringify(temp));
         console.log('');
 		
-	
+		var webstats = text["webstats"]; 
+		console.log(webstats); 
+		if(webstats[0].length >= 1){
+			
+			
+			//<label id = "wordoccurence"></label>
+			avewordcnt.innerHTML =  "Average Word Count: " + webstats[1];
+			biggestword.innerHTML = "biggest word:       " + webstats[2];
+			commonword.innerHTML =  "Most common word:   " + webstats[3];
+			wordoccurence.innerHTML="with occurence:     " + webstats[4];
+			wordcounts.innerHTML = ""; 
+			for (var i = 0; i < 10; i++){
+				var el = document.createElement('li');
+				el.appendChild(document.createTextNode(webstats[0][i]));
+				wordcounts.append(el); 
+			}
+		}
     }).catch(err => {
 		console.log("error caught");
 		console.log(err);

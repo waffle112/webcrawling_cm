@@ -3,6 +3,8 @@ from flask_cors import CORS, cross_origin
 
 import json
 import os
+from crawler import *
+
 
 #https://medium.com/@dtkatz/3-ways-to-fix-the-cors-error-and-how-access-control-allow-origin-works-d97d55946d9
 
@@ -14,6 +16,7 @@ app.config['CORS_HEADERS'] = 'Content-Type'
 #d[name][website] = [time1, time2, ...]
 
 d = {}
+websites = {}
 
 @app.route('/')
 def hello_world():
@@ -48,6 +51,13 @@ def saveTime():
     website = data['website']
     print(name, time, website)
     print(d)
+
+
+    #store stats of website into server
+    if website not in websites.keys():
+        websites[website] = webscrape(website)
+
+    #store user data into server
     if name in d.keys():
         if website in d[name].keys():
             d[name][website].append(time)
@@ -78,6 +88,11 @@ def deleteTime():
     website = data['website']
     print(name, website)
     print(d)
+
+    #store stats of website into server
+    if website not in websites.keys():
+        websites[website] = webscrape(website)
+
     if name in d.keys():
         if website in d[name].keys():
             del d[name][website]
@@ -101,13 +116,20 @@ def showTime():
     website = data['website']
     print(name, website)
     print(d)
+
+    #store stats of website into server
+    if website not in websites.keys():
+        websites[website] = webscrape(website)
+
     try:
         temp = sorted(d[name][website])[:10]
     except KeyError:
         return jsonify({'flask': 'nothing received'})
 
     print(temp)
-    return jsonify({"time": temp})
+    temp2 = websites[website]
+    temp2[0] = temp2[0][:10]
+    return jsonify({"time": temp, "webstats": temp2})
 
 
 
