@@ -126,12 +126,27 @@ def showTime():
     except KeyError:
         return jsonify({'flask': 'nothing received'})
 
-    print(temp)
+    return jsonify({"time": temp})
+
+@app.route('/showWords', methods=['GET', 'POST'])
+@cross_origin()
+def showWords():
+    print("showWords")
+    data = request.get_json()
+    print(data)
+    if data == {}:
+        return jsonify({'flask': 'nothing received'})
+    website = data['website']
+    print(website)
+    print(d)
+
+    #store stats of website into server
+    if website not in websites.keys():
+        websites[website] = webscrape(website)
+
     temp2 = websites[website]
     temp2[0] = temp2[0][:10]
-    return jsonify({"time": temp, "webstats": temp2})
-
-
+    return jsonify({"webstats": temp2})
 
 
 if __name__ == '__main__':

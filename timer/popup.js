@@ -82,6 +82,7 @@ chrome.storage.local.get('elapsedTime', ({elapsedTime}) =>{
     self.websiteURL = activeTab.url; 
 	console.log('website set to' + self.websiteURL);
 	document.getElementById("websiteID").innerHTML = "Website: " + self.websiteURL;
+	showWords();
  });
 
 
@@ -119,6 +120,8 @@ chrome.storage.local.get('cont', ({cont}) =>{
 	}
 	
 });
+
+
 
 function testFlask(){
 	// fetch json - 'http://127.0.0.1:5000/test'
@@ -170,9 +173,35 @@ function showTime(){
 			
 		}
 		
-        console.log(JSON.stringify(temp));
-        console.log('');
+ 
 		
+    }).catch(err => {
+		console.log("error caught");
+		console.log(err);
+	});
+
+}
+
+function showWords(){
+	//send the username, the websiteurl, and the time to server to save 
+	console.log('sending ' + websiteURL);
+	fetch('http://127.0.0.1:5000/showWords',{
+		
+		method: "POST",
+			
+		body: JSON.stringify({
+			"website": self.websiteURL
+		}),
+		headers: new Headers({
+			"Content-Type": "application/json"
+		})
+		
+	}).then((response) => {
+        return response.json();
+    }).then((text) => {
+        console.log('GET response text:');
+        console.log(text); // Print the greeting as text
+				
 		var webstats = text["webstats"]; 
 		console.log(webstats); 
 		if(webstats[0].length >= 1){
@@ -217,7 +246,7 @@ function saveTimefunc(){
 		console.log(err);
 	});
 	showTime();
-		  
+	location.reload();	  
 }
 function delTimefunc(){
 	//send the username, the websiteurl, and the time to server to save 
@@ -239,6 +268,7 @@ function delTimefunc(){
 		console.log(err);
 	});
 	showTime();
+	location.reload();
 		  
 }
 function getUsername(){
@@ -248,7 +278,7 @@ function getUsername(){
 	document.getElementById("saveusername").placeholder = username;
 	document.getElementById("test").innerHTML = "Saved as " + username;
 	showTime();
-	
+	location.reload();
 }
 
 
