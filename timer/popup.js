@@ -66,6 +66,7 @@ var websiteURL = "N/A"; //modify html to indicate current website link
 
 
 //sync stuff here i think
+//store data that needs to be re-accessed each time popup.html refreshes 
 chrome.storage.local.get('startTime', ({startTime}) =>{
 	self.startTime = startTime;
 	console.log('checking for past startTime');
@@ -76,6 +77,7 @@ chrome.storage.local.get('elapsedTime', ({elapsedTime}) =>{
 	console.log('checking for past elapsedTime');
 });
 
+//gets active website url 
  chrome.tabs.query({active: true, currentWindow: true}, function(tabs) {
 
     var activeTab = tabs[0];
@@ -141,9 +143,12 @@ function testFlask(){
 	  });
 	
 }
+
+
 function showTime(){
 	//send the username, the websiteurl, and the time to server to save 
 	console.log('sending ' + username + ', ' + websiteURL);
+	//send data 
 	fetch('http://127.0.0.1:5000/showTime',{
 		
 		method: "POST",
@@ -158,6 +163,8 @@ function showTime(){
 		
 	}).then((response) => {
         return response.json();
+		
+	//recieve data 
     }).then((text) => {
         console.log('GET response text:');
         console.log(text); // Print the greeting as text
@@ -226,6 +233,9 @@ function showWords(){
 }
 
 function saveTimefunc(){
+	
+	pause();
+	
 	//send the username, the websiteurl, and the time to server to save 
 	console.log('sending ' + username + ', ' + websiteURL + ' ' + elapsedTime);	
 	fetch('http://127.0.0.1:5000/saveTime',{
