@@ -38,6 +38,10 @@ expected logistic
 */
 
 
+//var server = 'http://172.18.0.72:8080'
+var server = 'https://timerserver.justinlin10.repl.co'
+//var server = 'http://127.0.0.1:5000'
+
 //add eventlisteners for each button
 let startTimer = document.getElementById("start");
 let stopTimer = document.getElementById("stop");
@@ -127,7 +131,7 @@ chrome.storage.local.get('cont', ({cont}) =>{
 
 function testFlask(){
 	// fetch json - 'http://127.0.0.1:5000/test'
-	fetch('http://127.0.0.1:5000/test',{
+	fetch(server + '/test',{
 		method: "GET",
 		//mode: 'no-cors' //remove no-cors if app is successcully published 
       }).then((response) => {
@@ -145,11 +149,14 @@ function testFlask(){
 }
 
 
-function showTime(){
+const showTime = async function(){
+	
+	//await sleep(2000);
+	
 	//send the username, the websiteurl, and the time to server to save 
-	console.log('sending ' + username + ', ' + websiteURL);
+	console.log('SHOWTIME: sending ' + username + ', ' + websiteURL);
 	//send data 
-	fetch('http://127.0.0.1:5000/showTime',{
+	fetch(server + '/showTime',{
 		
 		method: "POST",
 			
@@ -192,7 +199,7 @@ function showTime(){
 function showWords(){
 	//send the username, the websiteurl, and the time to server to save 
 	console.log('sending ' + websiteURL);
-	fetch('http://127.0.0.1:5000/showWords',{
+	fetch(server + '/showWords',{
 		
 		method: "POST",
 			
@@ -232,13 +239,13 @@ function showWords(){
 	});
 }
 
-function saveTimefunc(){
+const saveTimefunc = async function(){
 	
 	pause();
 	
 	//send the username, the websiteurl, and the time to server to save 
-	console.log('sending ' + username + ', ' + websiteURL + ' ' + elapsedTime);	
-	fetch('http://127.0.0.1:5000/saveTime',{
+	console.log('SAVETIME: sending ' + username + ', ' + websiteURL + ' ' + elapsedTime);	
+	fetch(server + '/saveTime',{
 		
 		method: "POST",
 			
@@ -255,13 +262,14 @@ function saveTimefunc(){
 		console.log("error caught");
 		console.log(err);
 	});
-	showTime();
+	await sleep(50);
+	//showTime();
 	location.reload();	  
 }
-function delTimefunc(){
+const delTimefunc = async function(){
 	//send the username, the websiteurl, and the time to server to save 
 	console.log('sending ' + username + ', ' + websiteURL + ' ' + elapsedTime);	
-	fetch('http://127.0.0.1:5000/delTime',{
+	fetch(server + '/delTime',{
 		
 		method: "POST",
 			
@@ -277,7 +285,8 @@ function delTimefunc(){
 		console.log("error caught");
 		console.log(err);
 	});
-	showTime();
+	await sleep(50);
+	//showTime();
 	location.reload();
 		  
 }
@@ -345,6 +354,12 @@ function setTime(txt){
 };
 
 
+
+function sleep(ms) {
+  return new Promise((resolve) => {
+    setTimeout(resolve, ms);
+  });
+}
 
 
 function timeToString(time) {
